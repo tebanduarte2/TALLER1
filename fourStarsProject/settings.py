@@ -77,6 +77,8 @@ WSGI_APPLICATION = 'fourStarsProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
+load_dotenv()
 #DATABASE - HOSTED BY   NEON
 DATABASES = {
   'default': {
