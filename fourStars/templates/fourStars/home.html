@@ -1,20 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<!-- Load tailwind css -->
-{% load static tailwind_tags %}
+{% extends 'fourStars/base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-{% tailwind_css %}
+{% block title %}Home{% endblock %}
 
-<body class="bg-gray-900">
-    <h1 class="">Home</h1>
-    <br>
-    <h2>welcome to Four Stars {{ name }}</h2>
-    <img src="https://mbainternationalbusiness.net/wp-content/uploads/2015/04/Univ.-EAFIT-Logo.jpg" alt="eafit logo">
-
-</body>
-
-</html>
+{% block content %}
+<div class="text-center">
+    <h1 class="text-4xl font-bold mb-4">Welcome to Four Stars, {{ name }}</h1>
+    <img src="https://mbainternationalbusiness.net/wp-content/uploads/2015/04/Univ.-EAFIT-Logo.jpg" alt="EAFIT logo" class="mx-auto mt-6 w-48">
+    <p class="mt-6 text-lg">We're glad to have you here!</p>
+</div>
+{% endblock %}
