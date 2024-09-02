@@ -7,14 +7,11 @@
     <title>{% block title %}My Django Project{% endblock %}</title>
     {% tailwind_css %}
 </head>
-<body>
-
-  </body>
-<body class="bg-gray-900 text-white flex flex-col justify-between mb-auto h-screen">
+<body class="bg-gray-900 text-white flex flex-col justify-between  h-screen">
 
     {% include "partials/nav.html" %}
 
-    <div class="container mx-auto p-8">
+    <div class="container mx-auto mb-auto p-8">
         {% block content %}
         {% endblock %}
     </div>

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Count, Prefetch
+from django.db.models import Count, Prefetch, Q
 from .models import Professor, Rating
 from django.views.decorators.cache import cache_page
 
@@ -11,11 +11,18 @@ def home(request):
 def about(request):
     return render(request, 'fourStars/about.html')
 
-# Cache for 15 minutes
-@cache_page(60 * 15)
+
 def professors(request):
+    search_query = request.GET.get('search', '')
     # Prefetch related ratings and courses to avoid multiple queries in the template
     professors = Professor.objects.prefetch_related('ratings', 'courses').all()
+    
+    if search_query:
+        professors = professors.filter(
+            Q(first_name__icontains=search_query) | 
+            Q(last_name__icontains=search_query) |
+            Q(courses__name__icontains=search_query)
+        ).distinct()
     
     professors_with_data = []
     for professor in professors:
@@ -26,7 +33,7 @@ def professors(request):
             'courses': professor.courses.all(),
         })
 
-    return render(request, 'fourStars/professors.html', {'professors': professors_with_data})
+    return render(request, 'fourStars/professors.html', {'professors': professors_with_data, 'search_query': search_query})
 
 
 
