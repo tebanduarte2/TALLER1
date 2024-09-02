@@ -1,4 +1,7 @@
-from django.db import models
+from django.db import models 
+
+
+
 
 
 # Create your models here.
@@ -33,21 +36,38 @@ class Professor(models.Model):
     def average_rating(self):
         ratings = self.ratings.all()
         if ratings.exists():
-            return ratings.aggregate(models.Avg('rating'))['rating__avg']
+            # Calculate the average rating for the professor, and format it to 2 decimal places
+            return "{:.1f}".format(sum(rating.rating for rating in ratings) / ratings.count())
         return None
+    #method for formating decimal to 2 decimal places
+    
     
     
  
-  
+ 
+ 
+
+
 
 class Rating(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     professor = models.ForeignKey(Professor, on_delete=models.CASCADE, related_name='ratings')
     rating = models.IntegerField()
     review = models.TextField()
+    
 
     class Meta:
         unique_together = ('student', 'professor')
         
     def __str__(self):  
         return str(self.rating) 
+    
+        
+           
+    
+    
+    
+
+
+    
+    
