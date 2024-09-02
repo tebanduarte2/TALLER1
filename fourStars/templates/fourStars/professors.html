@@ -5,8 +5,14 @@
 {% block content %}
 <section class="w-full flex items-center flex-col">
     <header>
-        <h1 class="text-2xl font-bold mb-4">{{ professors|length }} profesores disponibles</h1>
+        <h1 class="text-2xl font-bold mb-4">
+            {{ professors|length }} profesores disponibles
+            {% if search_query %}
+                para "{{ search_query }}"
+            {% endif %}
+        </h1>
     </header>
+    
     <ul class="professor-list flex flex-col gap-5 w-1/2">
         {% for professor_data in professors %}
         <li>
