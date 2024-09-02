@@ -963,10 +963,6 @@ select {
   width: 100%;
 }
 
-.w-min {
-  width: -moz-min-content;
-  width: min-content;
-}
 
 .w-1\/5 {
   width: 20%;
@@ -1036,9 +1032,6 @@ select {
   gap: 1.25rem;
 }
 
-.gap-6 {
-  gap: 1.5rem;
-}
 
 .gap-8 {
   gap: 2rem;
