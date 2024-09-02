@@ -5,37 +5,14 @@
 {% block content %}
 <section class="w-full flex items-center flex-col">
     <header>
-        <h1 class="text-2xl font-bold mb-4">{{professors.count}} profesores con el nombre..</h1>
+        <h1 class="text-2xl font-bold mb-4">{{ professors|length }} profesores disponibles</h1>
     </header>
-    <ul class=" professor-list flex flex-col gap-5">
-        {% for professor in professors %}
+    <ul class="professor-list flex flex-col gap-5 w-1/2">
+        {% for professor_data in professors %}
         <li>
-            <div
-                class="card flex  w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-
-                <div class="w-1/4 text-left">
-                    <h4 class="font-semibold">QUALITY</h4>
-                    <div class="bg-slate-900 p-2 w-min">
-                        <h1 class=" font-extrabold text-2xl ">{{professor.average_rating}}</h1>
-                    </div>
-                    <p> {{professor.ratings.all.count}} ratings</p>
-                </div>
-                <div>
-                    <h1 class=" font-extrabold text-xl ">{{professor}}</h1>
-                    <p>{%for course in professor.courses.all%}
-                        {{course.name}}{%if not forloop.last%}, {%endif%}
-                        {%endfor%}
-                    </p>
-                    <p class="text-gray-400">Ingenieria de sistemas</p>
-                </div>
-                <div></div>
-
-            </div>
+            {% include 'partials/professorCard.html' with professor=professor_data.professor average_rating=professor_data.average_rating ratings_count=professor_data.ratings_count courses=professor_data.courses %}
         </li>
         {% endfor %}
-
     </ul>
-
 </section>
-
 {% endblock %}
