@@ -1,13 +1,13 @@
 <a href="{% url 'professor_view' professor.id %}">
     <div class="card flex w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-        <div class="w-1/6 pr-8 flex flex-col items-center gap-2">
+        <div class="w-1/5 pr-8 flex flex-col items-center gap-2">
             <h4 class="font-semibold">QUALITY</h4>
             <div class="bg-slate-900 p-3 w-min">
                 <h1 class=" font-extrabold text-2xl ">{{ professor.average_rating }}</h1>
             </div>
-            <p>{{ professor.ratings.count }} ratings</p>
+            <p class=" text-sm" >{{ professor.ratings.count }} ratings</p>
         </div>
-        <div>
+        <div class=" flex flex-col gap-2">
             <h1 class=" font-extrabold text-xl ">{{ professor }}</h1>
             <p>
                 {% for course in professor.courses.all %}
