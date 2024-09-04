@@ -6,7 +6,6 @@ from .models import Student, Course, Professor, Rating
 class StudentAdmin(admin.ModelAdmin):
     list_display = ['id', 'first_name', 'last_name', 'email']
     search_fields = ['first_name', 'last_name', 'email']
-    list_filter = ['courses']
     ordering = ['id', 'first_name']
 
 @admin.register(Course)

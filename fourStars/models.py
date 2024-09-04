@@ -10,7 +10,6 @@ class Student(models.Model):
     last_name = models.CharField(max_length=50)
     email = models.EmailField(max_length=254, unique=True)
     password = models.CharField(max_length=50)
-    courses = models.ManyToManyField('Course', related_name='students')
     
     def __str__(self):
         return self.first_name + ' ' + self.last_name
@@ -43,24 +42,20 @@ class Professor(models.Model):
     
     
     
- 
- 
- 
-
 
 
 class Rating(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    professor = models.ForeignKey(Professor, on_delete=models.CASCADE, related_name='ratings')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)  # Ensures ratings are deleted when a student is deleted
+    professor = models.ForeignKey(Professor, on_delete=models.CASCADE, related_name='ratings')  # Ensures ratings are deleted when a professor is deleted
     rating = models.IntegerField()
     review = models.TextField()
-    
 
     class Meta:
         unique_together = ('student', 'professor')
         
     def __str__(self):  
-        return str(self.rating) 
+        return str(self.rating)
+
     
         
            
