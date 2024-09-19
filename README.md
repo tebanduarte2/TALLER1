@@ -5,9 +5,9 @@
 # 🌟 4Stars Project
 
 ### 🌟 4Stars Project Overview
-4Stars es una plataforma desarrollada para los estudiantes de la Universidad EAFIT, cuyo propósito principal es permitir que los estudiantes evalúen y califiquen a sus profesores. A través de un sistema de calificaciones y reseñas, 4Stars proporciona información valiosa sobre los profesores, ayudando a los estudiantes a tomar decisiones informadas al momento de seleccionar cursos. Este enfoque mejora la experiencia académica al ofrecer una visión clara de los estilos de enseñanza y desempeño de los profesores, promoviendo una experiencia educativa más satisfactoria.
+4Stars is a platform developed for the students of EAFIT University, whose main purpose is to allow students to evaluate and rate their professors. Through a system of ratings and reviews, 4Stars provides valuable information about professors, helping students make informed decisions when selecting courses. This approach enhances the academic experience by offering a clear view of teaching styles and professors' performance, promoting a more satisfying educational experience.
 
-Además, 4Stars sirve como una herramienta de retroalimentación para la universidad, permitiendo a la administración evaluar el rendimiento del profesorado en base a los comentarios de los estudiantes. Al brindar un espacio accesible y transparente, la plataforma busca resolver el problema de la falta de información sobre los profesores antes de la inscripción a las clases, garantizando que la elección de los estudiantes no quede al azar.
+Additionally, 4Stars serves as a feedback tool for the university, allowing the administration to assess professors' performance based on student feedback. By providing an accessible and transparent space, the platform seeks to solve the issue of insufficient information about professors before course enrollment, ensuring that students' choices are not left to chance.
 
 ---
 
