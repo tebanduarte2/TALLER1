@@ -1,13 +1,23 @@
-<div class="card gap-8 flex w-full p-6 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-    <div class=" w-1/8 gap-2 flex-col flex items-center">
+<div class="card gap-8 flex w-full p-6 border-opacity-20 border-white border rounded-lg shadow">
+    <div class="w-1/8 gap-4 flex-col flex items-center">
         <h4 class="font-semibold">CALIDAD</h4>
-        <div class="bg-slate-900 text-center py-2 w-full">
-            <h1 class=" font-extrabold text-2xl ">{{ rating.rating }}</h1>
+        <div class="text-center py-2 w-full">
+            
+            <div class="relative group">
+                {% if rating.rating >= 4 %}
+                    <!-- Enhanced design if rating > 4 -->
+                    <div class="absolute -inset-0.5 bg-gradient-to-br from-yellow-200 to-white rounded-lg blur-md opacity-75 group-hover:opacity-100 transition-opacity [transition-duration:1000ms] group-hover:[transition-duration:200ms]"></div>
+                {% endif %}
+                <!-- Common design for both cases -->
+                <h1 class="relative rounded-sm bg-white text-black py-2 font-extrabold text-2xl">
+                    {{ rating.rating }}
+                </h1>
+            </div>
+
         </div>
     </div>
     <div>
-        <h1 class=" font-extrabold text-xl ">{{ rating.student }}</h1>
+        <h1 class="font-extrabold text-xl text-yellow-400">{{ rating.student }}</h1>
         <p>{{ rating.review }}</p>
-        <p class="text-gray-400">{{ rating.course }}</p>
     </div>
 </div>
