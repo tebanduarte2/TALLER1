@@ -36,7 +36,7 @@ class Professor(models.Model):
         ratings = self.ratings.all()
         if ratings.exists():
             # Calculate the average rating for the professor, and format it to 2 decimal places
-            return "{:.1f}".format(sum(rating.rating for rating in ratings) / ratings.count())
+            return float("{:.1f}".format(sum(rating.rating for rating in ratings) / ratings.count()))
         return None
     #method for formating decimal to 2 decimal places
     
