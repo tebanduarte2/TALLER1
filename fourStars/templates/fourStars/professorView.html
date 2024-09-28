@@ -43,16 +43,26 @@
     </section>
 
     <section id="Ratings">
+        <article>
         <h1 class="text-xl font-bold mb-4 text-center">{{ ratings_count }} Reseñas de Estudiantes</h1>
         <hr class="mt-5 mb-10 h-0.5 border-t-0 bg-neutral-100 dark:bg-white/10" />
-        <ul class="professor-list flex flex-col gap-5">
-            {% for rating in ratings %}
-            <li>
-                {% include 'partials/reviewCard.html' with rating=rating %}
-            </li>
-            {% endfor %}
-        </ul>
+
+            <article class="space-y-4">      
+              <button class="bg-black hover:bg-white hover:text-black font-semibold p-2 border border-white transition duration-200 rounded-md relative group">
+                <a href="{% url 'professor_rating' professor.id %}">Califica a tu profesor</a>
+                <div class="absolute inset-0 bg-white blur-sm group-hover:blur-md transition duration-200 -z-10" ></div>
+            </button>
+            <ul class="professor-list flex flex-col gap-5">
+                {% for rating in ratings %}
+                <li>
+                    {% include 'partials/reviewCard.html' with rating=rating %}
+                </li>
+                {% endfor %}
+            </ul>
+        </article>
+
     </section>
+
 </main>
 
 {% endblock %}

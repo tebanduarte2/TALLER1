@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count, Prefetch, Q
-from .models import Professor, Rating, Course
+from .models import Professor, Rating, Course, Student
 from django.views.decorators.cache import cache_page
 
 
@@ -12,6 +12,45 @@ def home(request):
 def about(request):
     
     return render(request, 'fourStars/about.html')
+
+
+def professor_rating(request, professor_id):
+    professor = get_object_or_404(Professor, id=professor_id)
+
+    # Assuming the student is already known (you can modify this depending on how you get the student)
+    student = Student.objects.first()
+
+    if request.method == 'POST':
+        rating_value = request.POST.get('rating')
+        review_text = request.POST.get('review')
+
+        if rating_value:
+            # Check if the student already rated this professor
+            rating, created = Rating.objects.update_or_create(
+                student=student,
+                professor=professor,
+                defaults={
+                    'rating': rating_value,
+                    'review': review_text,
+                }
+            )
+
+            # Redirect to the professor view or a success page
+            return redirect('professor_view', professor_id=professor.id)
+        else:
+            # Return the form with an error if no rating was provided
+            error = "Debe seleccionar una calificación"
+            return render(request, 'fourStars/professorRating.html', {
+                'professor': professor,
+                'opciones': range(1, 6),
+                'error': error,
+            })
+
+    # If GET request, show the form
+    return render(request, 'fourStars/professorRating.html', {
+        'professor': professor,
+        'opciones': range(1, 6)
+    })
 
 def add_professor(request):
     if request.method == 'POST':
@@ -62,6 +101,7 @@ def add_professor(request):
     # If GET request, show the form
     courses = Course.objects.all()
     return render(request, 'fourStars/addProfessor.html', {'courses': courses})
+
 
 
 
