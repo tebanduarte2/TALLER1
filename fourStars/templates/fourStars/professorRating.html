@@ -1,0 +1,52 @@
+{% extends 'fourStars/base.html' %}
+{% block title %}Professors rating{%endblock%}
+{% block content %}
+<main class="flex w-full justify-around m-12">
+  <section class="w-2/5">
+    <form action="">
+      <div
+        class="bg-zinc-950 p-12 rounded-md border border-white border-opacity-20 space-y-2"
+      >
+        <h1 class="font-semibold">Califica tu profesor</h1>
+        <h2 class="opacity-50">Luis Fernando Londono Londono</h2>
+
+        <div>
+          {% for opcion in opciones%}
+          <label for="">1</label>
+          <input type="radio" />
+          {% endfor %}
+        </div>
+      </div>
+      <div
+        class="bg-zinc-950 p-12 rounded-md border border-white border-opacity-20 space-y-2"
+      >
+        <h1 class="font-semibold">Califica tu profesor</h1>
+        <h2 class="opacity-50">Luis Fernando Londono Londono</h2>
+
+        <div>
+          {% for opcion in opciones%}
+          <label for="">1</label>
+          <input type="radio" />
+          {% endfor %}
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <section
+    class="bg-zinc-950 p-12 rounded-md border border-white border-opacity-20 space-y-3 w-[28%]"
+  >
+    <h1 class="font-bold text-4xl tracking-tight">
+      CALIFICACION <br />
+      PROFESOR
+    </h1>
+    <h2 class="text-3xl tracking-tighter">Luis Fernando Londono Londono</h2>
+    <p class="opacity-45">3 cursos</p>
+    <img
+      class="w-full rounded-md"
+      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7vEId4ZL-1Wk6ar8iMeNocknBSUSzBXkmTA&s"
+      alt=""
+    />
+  </section>
+</main>
+{% endblock %}
