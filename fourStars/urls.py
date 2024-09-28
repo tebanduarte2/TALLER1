@@ -7,6 +7,8 @@ urlpatterns = [
     path('about/', views.about, name='about'),
     path('professors/', views.professors, name='professors'),
     path('professorView/<int:professor_id>/', views.professor_view, name='professor_view'),
-    path('professorRating/', views.professor_rating, name='professor_rating'),
-    ] + debug_toolbar_urls()
-    
+    path('professorRating/<int:professor_id>', views.professor_rating, name='professor_rating'),
+     path('addProfessor/', views.add_professor, name='add_professor'),
+    ] + debug_toolbar_urls()    
+       
+

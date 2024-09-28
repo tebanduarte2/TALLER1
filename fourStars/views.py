@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count, Prefetch, Q
-from .models import Professor, Rating
+from .models import Professor, Rating, Course, Student
 from django.views.decorators.cache import cache_page
 
 
@@ -10,10 +10,99 @@ def home(request):
 
 
 def about(request):
+    
     return render(request, 'fourStars/about.html')
 
-def professor_rating(request):
-    return render(request, 'fourStars/professorRating.html',{'opciones':range(1,6)})
+
+def professor_rating(request, professor_id):
+    professor = get_object_or_404(Professor, id=professor_id)
+
+    # Assuming the student is already known (you can modify this depending on how you get the student)
+    student = Student.objects.first()
+
+    if request.method == 'POST':
+        rating_value = request.POST.get('rating')
+        review_text = request.POST.get('review')
+
+        if rating_value:
+            # Check if the student already rated this professor
+            rating, created = Rating.objects.update_or_create(
+                student=student,
+                professor=professor,
+                defaults={
+                    'rating': rating_value,
+                    'review': review_text,
+                }
+            )
+
+            # Redirect to the professor view or a success page
+            return redirect('professor_view', professor_id=professor.id)
+        else:
+            # Return the form with an error if no rating was provided
+            error = "Debe seleccionar una calificación"
+            return render(request, 'fourStars/professorRating.html', {
+                'professor': professor,
+                'opciones': range(1, 6),
+                'error': error,
+            })
+
+    # If GET request, show the form
+    return render(request, 'fourStars/professorRating.html', {
+        'professor': professor,
+        'opciones': range(1, 6)
+    })
+
+def add_professor(request):
+    if request.method == 'POST':
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        email = request.POST.get('email')
+        selected_courses = request.POST.getlist('cursos')
+
+        # Validate email
+        if not email.endswith('@eafit.edu.co'):
+            selected_courses = [int(course_id) for course_id in selected_courses]
+            return render(request, 'fourStars/addProfessor.html', {
+                'courses': Course.objects.all(),
+                'error': 'El correo debe terminar con @eafit.edu.co',
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'selected_courses': selected_courses,
+            })
+
+        # Ensure at least one course is selected
+        if len(selected_courses) == 0:
+            selected_courses = [int(course_id) for course_id in selected_courses]
+            return render(request, 'fourStars/addProfessor.html', {
+                'courses': Course.objects.all(),
+                'error': 'Debe seleccionar al menos un curso.',
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'selected_courses': selected_courses,
+            })
+
+        # Create the Professor instance
+        professor = Professor.objects.create(
+            first_name=first_name,
+            last_name=last_name,
+            email=email
+        )
+
+        # Add selected courses
+        for course_id in selected_courses:
+            course = Course.objects.get(id=course_id)
+            professor.courses.add(course)
+
+        # Redirect to a success page or the homepage
+        return redirect('professors')
+
+    # If GET request, show the form
+    courses = Course.objects.all()
+    return render(request, 'fourStars/addProfessor.html', {'courses': courses})
+
+
 
 
 def professors(request):

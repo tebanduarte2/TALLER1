@@ -3,24 +3,32 @@
 {% block title %}Professors{% endblock %}
 
 {% block content %}
-<section class="w-full flex items-center flex-col">
-    <header class="mb-4">
-        <h1 class="text-2xl font-bold mb-4">
-            {{ professors|length }} profesores disponibles
-            {% if search_query %}
-                para "{{ search_query }}"
-            {% endif %}
-        </h1>
-        
+<main class="my-12">
+    <section class="w-full flex items-center flex-col">
+        <header class="mb-4">
+            <h1 class="text-2xl font-bold mb-4">
+                {{ professors|length }} profesores disponibles
+                {% if search_query %}
+                    para "{{ search_query }}"
+                {% endif %}
+            </h1>
+            
 
-    </header>
-    
-    <ul class="professor-list flex flex-col gap-5 w-1/2">
-        {% for professor_data in professors %}
-        <li>
-            {% include 'partials/professorCard.html' with professor=professor_data.professor average_rating=professor_data.average_rating ratings_count=professor_data.ratings_count courses=professor_data.courses %}
-        </li>
-        {% endfor %}
-    </ul>
-</section>
+        </header>
+        
+        <div class="w-1/2 space-y-10">
+            <button class="group relative bg-black rounded-md text-lg font-semibold p-2 border border-white transition duration-200  hover:bg-white hover:text-black">
+                <a class=" " href="{% url 'add_professor' %}">Añadir profesor</a>
+                <div class="absolute inset-0 bg-white transition blur-sm duration-200 group-hover:blur-md  -z-10"></div>
+            </button>
+            <ul class="professor-list flex flex-col gap-5">
+                {% for professor_data in professors %}
+                <li>
+                    {% include 'partials/professorCard.html' with professor=professor_data.professor average_rating=professor_data.average_rating ratings_count=professor_data.ratings_count courses=professor_data.courses %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+</main>
 {% endblock %}
