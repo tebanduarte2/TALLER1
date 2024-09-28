@@ -20,11 +20,13 @@ model = genai.GenerativeModel('gemini-pro')
 
 # Instruction to generate a neutral professor description
 instruction_professor = """
-Genera un nombre completo para un profesor universitario, con un correo electrónico asociado. El correo debe ser en el formato profesor@universidad.edu.co.
+Genera un nombre completo para un profesor universitario, con un correo electrónico asociado. El correo debe ser en el formato profesor@universidad.edu.co,donde dice profesor se debre reemplazar el nombre del profesor para completar el email, solamente debes escribir el nombre y el mail separados por comas, es lo unico que escribiras como respuesta, ejemplo de respuesta
+nombre,apellido,email. todo siempre separado por comas, no debes incluir ningun otro texto que no sea ese
 """
 
 instruction_student = """
-Genera un nombre completo para un estudiante universitario, con un correo electrónico asociado. El correo debe ser en el formato estudiante@universidad.edu.co.
+Genera un nombre completo para un estudiante universitario, con un correo electrónico asociado. El correo debe ser en el formato estudiante@universidad.edu.co en donde dice estudiante se debre reemplazar el nombre del estudiante para completar el email solamente debes escribir el nombre y el mail separados por comas, es lo unico que escribiras como respuesta, ejemplo de respuesta
+nombre,apellido,email. todo siempre separado por comas, no debes incluir ningun otro texto que no sea ese
 """
 
 # Helper function to generate content with safety check
@@ -55,10 +57,7 @@ def create_professors(num_professors=25):
         if professor_info and "@" in professor_info:
             try:
                 # Split by space and at sign to capture name and email
-                name_part, email_part = professor_info.split("@")
-                name = name_part.strip()
-                email = f"{name_part.strip()}@{email_part.strip()}"
-                first_name, last_name = name.split()[:2]  # Split name into first and last name
+                first_name, last_name, email = professor_info.split(",")
 
                 # Save professor to the database
                 professor = Professor(first_name=first_name, last_name=last_name, email=email)
@@ -87,10 +86,7 @@ def create_students(num_students=25):
         if student_info and "@" in student_info:
             try:
                 # Split by space and at sign to capture name and email
-                name_part, email_part = student_info.split("@")
-                name = name_part.strip()
-                email = f"{name_part.strip()}@{email_part.strip()}"
-                first_name, last_name = name.split()[:2]  # Split name into first and last name
+                first_name, last_name, email = student_info.split(",")
 
                 # Save student to the database
                 password = 'password123'  # You can randomize this if needed
@@ -107,5 +103,5 @@ def create_students(num_students=25):
         time.sleep(3)
 
 if __name__ == "__main__":
-    create_professors()  # Create 25 professors
+    create_professors()  # Create
     create_students()  # Create 25 students
