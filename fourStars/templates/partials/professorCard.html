@@ -7,7 +7,10 @@
                     {% if professor.average_rating >= 4 %}
                         <div class="absolute -inset-0.5 bg-gradient-to-br from-yellow-200 to-white rounded-lg blur-md opacity-75 group-hover:opacity-100 transition-opacity [transition-duration:1000ms] group-hover:[transition-duration:200ms]"></div>
                     {% endif %}
-                    <h1 class="relative bg-white text-black rounded-sm p-3 font-extrabold text-2xl ">{{ professor.average_rating }}</h1>
+                    <h1 class="relative bg-white text-black rounded-sm p-3 font-extrabold text-2xl ">
+                        {{ professor.average_rating|default_if_none:"N/A" }}
+                    </h1>
+
                 </div>
                 
             </div>
