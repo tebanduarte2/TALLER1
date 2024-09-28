@@ -12,6 +12,9 @@ def home(request):
 def about(request):
     return render(request, 'fourStars/about.html')
 
+def professor_rating(request):
+    return render(request, 'fourStars/professorRating.html',{'opciones':range(1,6)})
+
 
 def professors(request):
     search_query = request.GET.get('search', '')
