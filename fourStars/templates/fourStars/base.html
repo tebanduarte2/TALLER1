@@ -8,16 +8,20 @@
     <title>{% block title %}My Django Project{% endblock %}</title>
     {% tailwind_css %}
 </head>
-<body class="bg-gray-900 text-white flex flex-col justify-between  h-screen">
 
-    {% include "partials/nav.html" %}
+<body class="bg-black text-white  relative min-h-dvh ">
 
-    <div class="container mx-auto mb-auto p-8">
+    <!-- Correct header tag opening and closing -->
+    <header class="sticky top-0  z-10">
+        {% include "partials/nav.html"  with hide_search=search %}
+    </header>
+
+
         {% block content %}
         {% endblock %}
-    </div>
 
- 
+
     {% include "partials/footer.html" %}
+
 </body>
 </html>

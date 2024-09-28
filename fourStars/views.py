@@ -3,11 +3,12 @@ from django.db.models import Count, Prefetch, Q
 from .models import Professor, Rating
 from django.views.decorators.cache import cache_page
 
-@cache_page(60 * 15)
-def home(request):
-    return render(request, 'fourStars/home.html')
 
-@cache_page(60 * 15)
+def home(request):
+
+    return render(request, 'fourStars/home.html', {'search': 'True'})
+
+
 def about(request):
     return render(request, 'fourStars/about.html')
 
