@@ -1,7 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Count, Prefetch, Q
-from .models import Professor, Rating, Course, Student
+from .models import Professor, Rating, Course
 from django.views.decorators.cache import cache_page
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import login
+from django.contrib import messages
+from django.urls import reverse_lazy
+from .forms import StudentLoginForm, StudentRegistrationForm
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
@@ -14,11 +20,45 @@ def about(request):
     return render(request, 'fourStars/about.html')
 
 
+def register(request):
+    if request.method == 'POST':
+        form = StudentRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()  # Save the new user
+            login(request, user)  # Log the user in
+            messages.success(request, f'Welcome {user.first_name}, your account has been created!')
+            return redirect('home')  # Redirect to home page or wherever you want
+    else:
+        form = StudentRegistrationForm()
+    
+    return render(request, 'fourStars/register.html', {'form': form})
+
+class StudentLoginView(LoginView):
+    form_class = StudentLoginForm
+    template_name = 'fourStars/login.html'
+
+    def form_valid(self, form):
+        user = form.get_user()
+        login(self.request, user)
+        messages.success(self.request, f"Welcome back, {user.first_name}!")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('home')  # Ensure this redirects to 'home'
+
+    
+        
+
+class StudentLogoutView(LogoutView):
+    next_page = reverse_lazy('home')  # Redirect to the homepage after logout
+
+
+@login_required  # Ensure that only logged-in users can access this view
 def professor_rating(request, professor_id):
     professor = get_object_or_404(Professor, id=professor_id)
 
-    # Assuming the student is already known (you can modify this depending on how you get the student)
-    student = Student.objects.first()
+    # Get the currently logged-in student from the request
+    student = request.user
 
     if request.method == 'POST':
         rating_value = request.POST.get('rating')
@@ -49,9 +89,11 @@ def professor_rating(request, professor_id):
     # If GET request, show the form
     return render(request, 'fourStars/professorRating.html', {
         'professor': professor,
-        'opciones': range(1, 6)
+        'opciones': range(1, 6),
+        'student_name': student.first_name  # Pass student's first name to the template
     })
 
+@login_required  # Ensure that only logged-in users can access this view
 def add_professor(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name')

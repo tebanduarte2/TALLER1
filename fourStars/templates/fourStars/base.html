@@ -9,10 +9,10 @@
     {% tailwind_css %}
 </head>
 
-<body class="bg-black text-white  relative min-h-dvh ">
+<body class="bg-black text-white  relative min-h-dvh grid">
 
     <!-- Correct header tag opening and closing -->
-    <header class="sticky top-0  z-10">
+    <header class="w-full top-0  z-10 sticky">
         {% include "partials/nav.html"  with hide_search=search %}
     </header>
 
@@ -23,5 +23,21 @@
 
     {% include "partials/footer.html" %}
 
+    <!-- In your base.html -->
+    {% if messages %}
+    <div class="dialog bg-white p-4 rounded-lg shadow-lg">
+        {% for message in messages %}
+        <p class="text-black
+                {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
 </body>
+<style>
+    body{
+        grid-template-rows: auto 1fr auto;
+    }
+</style>
 </html>

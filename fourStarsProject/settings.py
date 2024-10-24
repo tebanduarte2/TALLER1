@@ -171,3 +171,12 @@ LOGGING = {
         },
     },
 }
+
+# USER MANAGEMENT
+# settings.py
+AUTH_USER_MODEL = 'fourStars.Student'  # Use the custom Student model as the user model
+LOGIN_REDIRECT_URL = 'home'  # Redirect after successful login
+LOGOUT_REDIRECT_URL = 'home'  # Redirect to home after logout
+
+LOGIN_URL = '/login/'
+
