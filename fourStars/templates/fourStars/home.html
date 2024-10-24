@@ -4,10 +4,10 @@
 
 {% block content %}
 
-<div class="text-center absolute   w-full  inset-0 bg-cover"
+<main class="text-center  w-full  inset-0 bg-cover -mt-20 -mb-10"
     style="background-image: url('https://images.unsplash.com/photo-1641443084309-7b73be298683?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
     <div
-    class="absolute bottom-0 flex flex-col items-center justify-center left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed"
+    class=" bottom-0 flex flex-col items-center justify-center left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed"
     style="background-color: rgba(0, 0, 0, 0.6)">
     <img src="../../static/images/eafit_logo.png" alt="EAFIT logo" class="mx-auto mt-6 w-48">
     <h1 class="text-4xl font-bold mb-4">Welcome to Four Stars, {{ name }}</h1>
@@ -29,8 +29,13 @@
 
             </div>
         </form>
-        <p class="mt-6 text-lg">We're glad to have you here!</p>
+        <p class="mt-6 text-lg">We're glad to have you here 
+            {% if user.is_authenticated %}{{ user.first_name }}{% endif %} !</p>
     </div>
+    <!-- log messages in a dialog if existent -->
+
+
+
 </main>
 
 
@@ -39,4 +44,6 @@
 
 
 
-    {% endblock %}
+
+
+{% endblock %}

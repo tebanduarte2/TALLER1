@@ -27,11 +27,30 @@
         {% endif %}
 
         
-        <ul class="flex space-x-4">
-            
-            <li><a href="{% url 'about' %}" class="text-black bg-white font-bold p-4 rounded-md  hover:opacity-85">Registrate</a></li>
-            <li><a href="{% url 'about' %}" class="text-white font-bold  p-4 rounded-md bg-black">Inicia sesion</a></li>
-
+        <ul class="flex space-x-4 items-center">
+            {% if user.is_authenticated %}
+            <li class="text-white font-bold">Hola, {{ user.first_name }}</li>
+            <li>
+                <form method="POST" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="text-black bg-white font-bold p-4 rounded-md hover:opacity-85">
+                        Cerrar sesión
+                    </button>
+                </form>
+            </li>
+            {% else %}
+            <li>
+                <a href="{% url 'register' %}" class="text-black bg-white font-bold p-4 rounded-md hover:opacity-85">
+                    Regístrate
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'login' %}" class="text-white font-bold p-4 rounded-md bg-black">
+                    Inicia sesión
+                </a>
+            </li>
+            {% endif %}
         </ul>
+
     </div>
 </nav>
