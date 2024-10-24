@@ -864,10 +864,6 @@ select {
   margin: 3rem;
 }
 
-.-m-12 {
-  margin: -3rem;
-}
-
 .mx-24 {
   margin-left: 6rem;
   margin-right: 6rem;
@@ -888,6 +884,14 @@ select {
   margin-bottom: 2rem;
 }
 
+.-mb-10 {
+  margin-bottom: -2.5rem;
+}
+
+.-mt-20 {
+  margin-top: -5rem;
+}
+
 .mb-10 {
   margin-bottom: 2.5rem;
 }
@@ -898,10 +902,6 @@ select {
 
 .mb-4 {
   margin-bottom: 1rem;
-}
-
-.mt-12 {
-  margin-top: 3rem;
 }
 
 .mt-2 {
@@ -922,38 +922,6 @@ select {
 
 .mt-8 {
   margin-top: 2rem;
-}
-
-.-mt-12 {
-  margin-top: -3rem;
-}
-
-.-mt-24 {
-  margin-top: -6rem;
-}
-
-.-mt-20 {
-  margin-top: -5rem;
-}
-
-.-mt-16 {
-  margin-top: -4rem;
-}
-
-.-mb-20 {
-  margin-bottom: -5rem;
-}
-
-.-mb-4 {
-  margin-bottom: -1rem;
-}
-
-.-mb-6 {
-  margin-bottom: -1.5rem;
-}
-
-.-mb-10 {
-  margin-bottom: -2.5rem;
 }
 
 .block {
@@ -1002,10 +970,6 @@ select {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-dvh {
-  height: 100dvh;
 }
 
 .min-h-dvh {
@@ -1061,6 +1025,11 @@ select {
   width: 100%;
 }
 
+.w-max {
+  width: -moz-max-content;
+  width: max-content;
+}
+
 .w-min {
   width: -moz-min-content;
   width: min-content;
@@ -1098,24 +1067,12 @@ select {
   list-style-type: disc;
 }
 
-.grid-cols-4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
 .flex-col {
   flex-direction: column;
 }
 
-.content-center {
-  align-content: center;
-}
-
 .content-start {
   align-content: flex-start;
-}
-
-.items-start {
-  align-items: flex-start;
 }
 
 .items-center {
@@ -1132,6 +1089,10 @@ select {
 
 .justify-around {
   justify-content: space-around;
+}
+
+.gap-12 {
+  gap: 3rem;
 }
 
 .gap-2 {
@@ -1176,6 +1137,12 @@ select {
   margin-bottom: calc(2.5rem * var(--tw-space-y-reverse));
 }
 
+.space-y-2 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+
 .space-y-3 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));
@@ -1192,12 +1159,6 @@ select {
   --tw-space-y-reverse: 0;
   margin-top: calc(2rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(2rem * var(--tw-space-y-reverse));
-}
-
-.space-y-2 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
 }
 
 .overflow-hidden {
@@ -1513,6 +1474,10 @@ select {
   --tw-placeholder-opacity: 0;
 }
 
+.opacity-20 {
+  opacity: 0.2;
+}
+
 .opacity-40 {
   opacity: 0.4;
 }
@@ -1525,16 +1490,16 @@ select {
   opacity: 0.5;
 }
 
+.opacity-70 {
+  opacity: 0.7;
+}
+
 .opacity-75 {
   opacity: 0.75;
 }
 
-.opacity-80 {
-  opacity: 0.8;
-}
-
-.opacity-70 {
-  opacity: 0.7;
+.opacity-60 {
+  opacity: 0.6;
 }
 
 .shadow {
@@ -1651,21 +1616,6 @@ select {
   border-color: rgb(250 204 21 / var(--tw-border-opacity));
 }
 
-.hover\:border-red-600:hover {
-  --tw-border-opacity: 1;
-  border-color: rgb(220 38 38 / var(--tw-border-opacity));
-}
-
-.hover\:border-red-700:hover {
-  --tw-border-opacity: 1;
-  border-color: rgb(185 28 28 / var(--tw-border-opacity));
-}
-
-.hover\:border-red-800:hover {
-  --tw-border-opacity: 1;
-  border-color: rgb(153 27 27 / var(--tw-border-opacity));
-}
-
 .hover\:bg-white:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
@@ -1676,11 +1626,6 @@ select {
   background-color: rgb(250 204 21 / var(--tw-bg-opacity));
 }
 
-.hover\:bg-red-900:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(127 29 29 / var(--tw-bg-opacity));
-}
-
 .hover\:text-black:hover {
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
@@ -1689,11 +1634,6 @@ select {
 .hover\:text-yellow-400:hover {
   --tw-text-opacity: 1;
   color: rgb(250 204 21 / var(--tw-text-opacity));
-}
-
-.hover\:text-white:hover {
-  --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
 .hover\:opacity-30:hover {
@@ -1708,12 +1648,12 @@ select {
   opacity: 0.7;
 }
 
-.hover\:opacity-85:hover {
-  opacity: 0.85;
-}
-
 .hover\:opacity-80:hover {
   opacity: 0.8;
+}
+
+.hover\:opacity-85:hover {
+  opacity: 0.85;
 }
 
 .hover\:shadow-md:hover {
