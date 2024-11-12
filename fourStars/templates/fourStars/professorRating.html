@@ -3,7 +3,13 @@
 {% block content %}
 
 <style>
-          input[type="radio"]:checked + label {
+          #professor-rating input[type="radio"]:checked + label {
+            border-color: #fbbf24; /* Color del borde cuando se selecciona */
+            border-radius: 0.375rem; /* Para bordes redondeados */
+            color: #fbbf24; /* Color del texto cuando se selecciona */
+        }
+        
+          #professor-course input[type="radio"]:checked + label {
             border-color: #fbbf24; /* Color del borde cuando se selecciona */
             border-radius: 0.375rem; /* Para bordes redondeados */
             color: #fbbf24; /* Color del texto cuando se selecciona */
@@ -15,17 +21,45 @@
   <section class="w-2/5">
     <form class="flex flex-col gap-6" action="" method="POST">
       {% csrf_token %}
+      
       <div class="bg-zinc-950 p-10 rounded-md border border-white border-opacity-20 space-y-4">
+        <p>Materia</p>
+        <div>
+          <h1 class="font-semibold">Elige la materia a calificar</h1>
+          <h2 class="opacity-50">{{ professor.first_name }} {{ professor.last_name }}</h2>
+        </div>
+      <p>Materia</p>
+        <div class="space-y-4 flex flex-col w-full items-center">
+           
+          <div id="professor-course" class="grid grid-cols-3 gap-4 items-center w-full">
+            <!-- Dynamically generate course options -->
+            {% for course in professor.courses.all %}
+            <input type="radio" id="course-{{ course.id }}" name="course" value="{{ course.id }}" class="hidden" />
+            <label
+              class="py-3 px-5 border border-transparent rounded-lg cursor-pointer transition-colors duration-300 hover:border-yellow-400 text-white text-center"
+              for="course-{{ course.id }}">{{ course.name }}</label>
+            {% endfor %}
+          </div>
+          <p class="opacity-50">Selecciona una Opción</p>
+        </div>
+      
+        {% if error %}
+        <p class="text-red-500">{{ error }}</p>
+        {% endif %}
+      </div>
+
+
+      <div id="professor-rating" class="bg-zinc-950 p-10 rounded-md border border-white border-opacity-20 space-y-4">
         <div>
           <h1 class="font-semibold">Califica tu profesor</h1>
           <h2 class="opacity-50">{{ professor.first_name }} {{ professor.last_name }}</h2>
         </div>
 
         <div class="space-y-4 flex flex-col w-fit items-center">
-          <div class="flex gap-4 items-center">
+          <div class="flex gap-4 items-center flex-wrap">
             <p>Calificación</p>
             {% for opcion in opciones %}
-            <input type="radio" id="rating-{{ opcion }}" name="rating" value="{{ opcion }}" class="hidden" />
+            <input type="radio" id="rating-{{ opcion }}" name="rating" value="{{ opcion }}" class="hidden raing_description" />
             <label
               class="py-3 px-5 border border-transparent rounded-lg cursor-pointer transition-colors duration-300  hover:border-yellow-400 text-white"
               onclick="updateRatingText('Calificación: {{ opcion }}')" for="rating-{{ opcion }}">{{ opcion }}</label>
@@ -65,7 +99,7 @@
     <h2 class="text-3xl tracking-tighter text-white">{{ professor.first_name }} {{ professor.last_name }}</h2>
     <p class="opacity-45 text-gray-400">{{ professor.courses.count }} cursos</p>
     <img class="w-full rounded-md"
-      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7vEId4ZL-1Wk6ar8iMeNocknBSUSzBXkmTA&s" alt="" />
+      src="https://www.shutterstock.com/image-vector/blank-avatar-photo-place-holder-600nw-1095249842.jpg" alt="" />
   </section>
 </main>
 
@@ -76,7 +110,7 @@
     ratingDescription.innerText = text;
   };
 
-  const ratingInputs = document.querySelectorAll('input[type="radio"]');
+  const ratingInputs = document.querySelectorAll('#professor-rating input[type="radio"]');
   ratingInputs.forEach((input) => {
     input.addEventListener("click", (e) => {
       let text = "";

@@ -61,14 +61,35 @@ def professor_rating(request, professor_id):
     student = request.user
 
     if request.method == 'POST':
+        course_id = request.POST.get('course')
         rating_value = request.POST.get('rating')
         review_text = request.POST.get('review')
 
+        # Validate course selection
+        if not course_id:
+            error = "Debe seleccionar una materia"
+            return render(request, 'fourStars/professorRating.html', {
+                'professor': professor,
+                'opciones': range(1, 6),
+                'error': error,
+            })
+
+        # Ensure the selected course is taught by the professor
+        course = get_object_or_404(Course, id=course_id)
+        if course not in professor.courses.all():
+            error = "La materia seleccionada no es impartida por este profesor."
+            return render(request, 'fourStars/professorRating.html', {
+                'professor': professor,
+                'opciones': range(1, 6),
+                'error': error,
+            })
+
         if rating_value:
-            # Check if the student already rated this professor
+            # Check if the student already rated this professor and course
             rating, created = Rating.objects.update_or_create(
                 student=student,
                 professor=professor,
+                course=course,
                 defaults={
                     'rating': rating_value,
                     'review': review_text,
@@ -90,7 +111,7 @@ def professor_rating(request, professor_id):
     return render(request, 'fourStars/professorRating.html', {
         'professor': professor,
         'opciones': range(1, 6),
-        'student_name': student.first_name  # Pass student's first name to the template
+        'student_name': student.first_name,  # Pass student's first name to the template
     })
 
 @login_required  # Ensure that only logged-in users can access this view

@@ -1,5 +1,5 @@
 <a href="{% url 'professor_view' professor.id %}">
-    <div class="card flex gap-8 w-full p-6 bg-transparent border border-white border-opacity-20 rounded-lg  shadow-none transition-shadow duration-300 cursor-pointer hover:shadow-md hover:shadow-white  ">
+    <div class="card group flex gap-8 w-full p-6 bg-black border border-white border-opacity-20 rounded-lg relative  shadow-none transition-shadow duration-300 cursor-pointer   ">
         <div class="w-1/5 flex flex-col items-center gap-2">
             <h4 class="font-semibold">CALIDAD</h4>
             <div class=" p-3 w-min">
@@ -25,6 +25,8 @@
                 {% endfor %}
             </p>
             <p class="text-gray-400">Ingeniería de sistemas</p>
+           
         </div>
+        <div class="absolute size-full bg-white inset-0 -z-10 rounded-lg group-hover:blur transition duration-300 ease-in-out"></div>
     </div>
 </a>

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
-import datetime
+from django.core.exceptions import ValidationError
+
 
 
 class StudentManager(BaseUserManager):
@@ -69,14 +70,26 @@ class Professor(models.Model):
 class Rating(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)  # Ensures ratings are deleted when a student is deleted
     professor = models.ForeignKey(Professor, on_delete=models.CASCADE, related_name='ratings')  # Ensures ratings are deleted when a professor is deleted
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, default=1)  # Ensures ratings are linked to a course
     rating = models.IntegerField()
     review = models.TextField()
 
     class Meta:
-        unique_together = ('student', 'professor')
-        
+        unique_together = ('student', 'professor', 'course')  # Ensure a student can only rate a professor for a specific course once
+
+    def clean(self):
+        # Ensure the course is taught by the professor
+        if not self.professor.courses.filter(id=self.course.id).exists():
+            raise ValidationError(f"The course '{self.course}' is not taught by Professor {self.professor}.")
+
+    def save(self, *args, **kwargs):
+        # Call clean method before saving
+        self.clean()
+        super().save(*args, **kwargs)
+
     def __str__(self):  
-        return str(self.rating)
+        return f"{self.student} rated {self.professor} for {self.course}: {self.rating}"
+
 
     
         
