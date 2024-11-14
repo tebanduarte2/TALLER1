@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'fourStars',
     'tailwind',
     'theme',
+    'whitenoise.runserver_nostatic',
 ]
 
 TAILWIND_APP_NAME = 'theme'
@@ -58,6 +59,7 @@ NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
