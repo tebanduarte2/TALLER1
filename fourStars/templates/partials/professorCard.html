@@ -1,0 +1,32 @@
+<a href="{% url 'professor_view' professor.id %}">
+    <div class="card group flex gap-8 w-full p-6 bg-black border border-white border-opacity-20 rounded-lg relative  shadow-none transition-shadow duration-300 cursor-pointer   ">
+        <div class="w-1/5 flex flex-col items-center gap-2">
+            <h4 class="font-semibold">CALIDAD</h4>
+            <div class=" p-3 w-min">
+                <div class=" relative group">
+                    {% if professor.average_rating >= 4 %}
+                        <div class="absolute -inset-0.5 bg-gradient-to-br from-yellow-200 to-white rounded-lg blur-md opacity-75 group-hover:opacity-100 transition-opacity [transition-duration:1000ms] group-hover:[transition-duration:200ms]"></div>
+                    {% endif %}
+                    <h1 class="relative bg-white text-black rounded-sm p-3 font-extrabold text-2xl ">
+                        {{ professor.average_rating|default_if_none:"N/A" }}
+                    </h1>
+
+                </div>
+                
+            </div>
+            <p class=" text-sm" >{{ professor.ratings.count }} ratings</p>
+            
+        </div>
+        <div class=" flex flex-col gap-2 w-2/3">
+            <h1 class=" font-extrabold text-2xl text-yellow-400">{{ professor }}</h1>
+            <p>
+                {% for course in professor.courses.all %}
+                    {{ course.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            <p class="text-gray-400">Ingeniería de sistemas</p>
+           
+        </div>
+        <div class="absolute size-full bg-white inset-0 -z-10 rounded-lg group-hover:blur transition duration-300 ease-in-out"></div>
+    </div>
+</a>

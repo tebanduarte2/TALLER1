@@ -1,0 +1,49 @@
+{% extends 'fourStars/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<main class="text-center  w-full  inset-0 bg-cover -mt-20 -mb-10"
+    style="background-image: url('https://images.unsplash.com/photo-1641443084309-7b73be298683?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
+    <div
+    class=" bottom-0 flex flex-col items-center justify-center left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed"
+    style="background-color: rgba(0, 0, 0, 0.6)">
+    <img src="../../static/images/eafit_logo.png" alt="EAFIT logo" class="mx-auto mt-6 w-48">
+    <h1 class="text-4xl font-bold mb-4">Welcome to Four Stars, {{ name }}</h1>
+    <form class="max-w-lg mx-auto w-full" method="GET" action="{% url 'professors' %}">  
+                
+        <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+        <div class="relative overflow-hidden rounded-lg">
+            <div class="z-10 absolute inset-y-0 right-0 flex  bg-white hover:bg-yellow-400 items-center px-3 group duration-300 transition">
+                <button type="submit">  <svg class="w-4 h-4 text-black  transition duration-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg></button>
+            </div>
+            <input  name="search" id="search" value="{{ search_query }}" class="block w-full bg-transparent border-opacity-20  font-semibold py-5 px-8  text-md text-white  border-gray-300 
+        outline-none focus:ring-0 focus:outline-none border-2 text-xl rounded-md placeholder-opacity-0 transition duration-1000   focus:backdrop-blur placeholder:text-white focus:border-white" placeholder="Busca Tu Profesor..."
+        style="::placeholder{
+            color: white;
+
+        }" />
+
+            </div>
+        </form>
+        <p class="mt-6 text-lg">We're glad to have you here 
+            {% if user.is_authenticated %}{{ user.first_name }}{% endif %} !</p>
+    </div>
+    <!-- log messages in a dialog if existent -->
+
+
+
+</main>
+
+
+
+
+
+
+
+
+
+{% endblock %}
