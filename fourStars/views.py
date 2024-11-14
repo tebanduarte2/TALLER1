@@ -114,37 +114,37 @@ def professor_rating(request, professor_id):
         'student_name': student.first_name,  # Pass student's first name to the template
     })
 
-@login_required
+@login_required  # Ensure that only logged-in users can access this view
 def add_professor(request):
     if request.method == 'POST':
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
-        # Get selected courses as a list 
-        selected_courses = request.POST.getlist('courses')
-            
-        
-        
-        
+        selected_courses = request.POST.getlist('cursos')
+        selected_courses_obj = list(Course.objects.filter(id__in=selected_courses))
 
         # Validate email
         if not email.endswith('@eafit.edu.co'):
+            selected_courses = [int(course_id) for course_id in selected_courses]
             return render(request, 'fourStars/addProfessor.html', {
                 'courses': Course.objects.all(),
-                'error_message': 'El correo debe terminar con @eafit.edu.co',
+                'error': 'El correo debe terminar con @eafit.edu.co',
                 'first_name': first_name,
                 'last_name': last_name,
                 'email': email,
+                'selected_courses': selected_courses_obj,
             })
 
         # Ensure at least one course is selected
-        if not selected_courses:
+        if len(selected_courses) == 0:
+            selected_courses = [int(course_id) for course_id in selected_courses]
             return render(request, 'fourStars/addProfessor.html', {
                 'courses': Course.objects.all(),
-                'error_message': 'Debe seleccionar al menos un curso.',
+                'error': 'Debe seleccionar al menos un curso.',
                 'first_name': first_name,
                 'last_name': last_name,
                 'email': email,
+                'selected_courses': selected_courses_obj,
             })
 
         # Create the Professor instance
@@ -156,11 +156,8 @@ def add_professor(request):
 
         # Add selected courses
         for course_id in selected_courses:
-            try:
-                course = Course.objects.get(id=course_id)
-                professor.courses.add(course)
-            except Course.DoesNotExist:
-                continue
+            course = Course.objects.get(id=course_id)
+            professor.courses.add(course)
 
         # Redirect to a success page or the homepage
         return redirect('professors')
@@ -168,6 +165,7 @@ def add_professor(request):
     # If GET request, show the form
     courses = Course.objects.all()
     return render(request, 'fourStars/addProfessor.html', {'courses': courses})
+
 
 
 
