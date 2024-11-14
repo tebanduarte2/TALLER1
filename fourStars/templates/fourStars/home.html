@@ -10,8 +10,8 @@
     class=" bottom-0 flex flex-col items-center justify-center left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed"
     style="background-color: rgba(0, 0, 0, 0.6)">
     <img src="../../static/images/eafit_logo.png" alt="EAFIT logo" class="mx-auto mt-6 w-48">
-    <h1 class="text-4xl font-bold mb-4">Welcome to Four Stars, {{ name }}</h1>
-    <form class="max-w-lg mx-auto w-full" method="GET" action="{% url 'professors' %}">  
+    <h1 class="text-4xl font-bold mb-4">Welcome to Four Stars{% if name %}, {{ name }}{% endif %}</h1>
+    <form class="max-w-lg mx-auto w-2/3 lg:w-full" method="GET" action="{% url 'professors' %}">  
                 
         <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
         <div class="relative overflow-hidden rounded-lg">
@@ -20,11 +20,11 @@
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                 </svg></button>
             </div>
-            <input  name="search" id="search" value="{{ search_query }}" class="block w-full bg-transparent border-opacity-20  font-semibold py-5 px-8  text-md text-white  border-gray-300 
-        outline-none focus:ring-0 focus:outline-none border-2 text-xl rounded-md placeholder-opacity-0 transition duration-1000   focus:backdrop-blur placeholder:text-white focus:border-white" placeholder="Busca Tu Profesor..."
+            <input  name="search" id="search" value="{{ search_query }}" class="block w-full bg-transparent border-opacity-20  font-semibold py-3 lg:py-5 px-8  text-md text-white  border-gray-300 
+        outline-none focus:ring-0 focus:outline-none border-2 text-xl rounded-lg placeholder-opacity-0 transition duration-1000   focus:backdrop-blur placeholder:text-sm  placeholder:text-white focus:border-white" placeholder="Busca Tu Profesor..."
         style="::placeholder{
             color: white;
-
+            font-size: 10px;
         }" />
 
             </div>
