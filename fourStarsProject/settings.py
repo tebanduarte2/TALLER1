@@ -151,7 +151,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = "35.184.220.186"
+ALLOWED_HOSTS = ["35.184.220.186"]
 
 LOGGING = {
     'version': 1,
