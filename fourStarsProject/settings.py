@@ -108,6 +108,7 @@ DATABASES = {
       'sslmode': 'require',
     },
   }
+
 }
 
 # Password validation
