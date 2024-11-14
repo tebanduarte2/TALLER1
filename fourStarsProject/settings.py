@@ -152,7 +152,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-ALLOWED_HOSTS = ["35.184.220.186", ".vecel.app"]
+ALLOWED_HOSTS = ["35.184.220.186", ".vecel.app", "127.0.0.1"]
 
 LOGGING = {
     'version': 1,
