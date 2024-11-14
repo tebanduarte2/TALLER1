@@ -1,6 +1,6 @@
 {% extends 'fourStars/base.html' %}
 
-{% block title %}Registro{% endblock %}
+{% block title %}Nuevo Profesor{% endblock %}
 
 {% block content %}
 <main class="mx-24 relative">
@@ -11,117 +11,100 @@
         }
     </style>
 
-    <!-- Modal for displaying email-specific errors -->
-    <dialog id="error-modal" class="fixed border border-white border-opacity-30 rounded-md w-1/3 bg-black justify-center items-center">
-        <div class="text-white p-6 rounded-lg text-center">
-            <h2 class="text-xl font-bold mb-4 text-red-600">Error en el Correo</h2>
-            <p id="error-message" class="mb-4">El correo electrónico debe terminar con @eafit.edu.co</p>
+
+    <!-- Modal for displaying errors -->
+    <dialog id="error-modal" class="fixed boted border border-white border-opacity-30 rounded-md  w-1/3 bg-black  justify-center items-center">
+       
+        <div class="text-white p-6 rounded-lg  text-center">
+            <h2 class="text-xl font-bold mb-4 text-red-600">Error</h2>
+            <p id="error-message" class="mb-4">{{ error }}</p>
             <button class="bg-red-600 text-white p-2 rounded-md" onclick="closeModal()">Entendido</button>
         </div>
     </dialog>
 
-    <section class="w-1/2 space-y-8">
-        <h1 class="text-4xl font-bold tracking-tighter">Registro</h1>
+    <section class="w-full md:w-2/3 lg:w-1/2 space-y-8 mx-auto">
+        <h1 class="text-4xl font-bold tracking-tighter">Añade un nuevo profesor</h1>
 
-        <form class="space-y-10" action="{% url 'register' %}" method="POST">
+        <form class="space-y-10" action="{% url 'add_professor' %}" method="POST">
             {% csrf_token %}
 
-            <!-- First Name -->
+            <!-- Nombre del profesor -->
             <div class="border border-white border-opacity-30 p-4 rounded-md space-y-3">
                 <div>
-                    <h3 class="font-semibold">Nombre</h3>
-                    <p class="opacity-40">Ingrese su nombre</p>
+                    <h3 class="font-semibold">Nombre del profesor</h3>
+                    <p class="opacity-40">Ingrese el nombre del profesor</p>
                 </div>
                 <div class="space-x-2">
                     <label for="first_name">Nombre</label>
                     <input class="bg-transparent border-white border-opacity-30 p-1 rounded-md" type="text"
-                        name="first_name" id="first_name" value="{{ form.first_name.value|default_if_none:'' }}" required>
+                        name="first_name" id="first_name" value="{{ first_name|default_if_none:'' }}" required>
                 </div>
-                {% if form.first_name.errors %}
-                    <p class="text-red-500">{{ form.first_name.errors|striptags }}</p>
-                {% endif %}
             </div>
 
-            <!-- Last Name -->
+            <!-- Apellidos del profesor -->
             <div class="border border-white border-opacity-30 p-4 rounded-md space-y-3">
                 <div>
-                    <h3 class="font-semibold">Apellido</h3>
-                    <p class="opacity-40">Ingrese su apellido</p>
+                    <h3 class="font-semibold">Apellidos del profesor</h3>
+                    <p class="opacity-40">Ingrese los apellidos</p>
                 </div>
                 <div class="space-x-2">
-                    <label for="last_name">Apellido</label>
+                    <label for="last_name">Apellidos</label>
                     <input class="bg-transparent border-white border-opacity-30 p-1 rounded-md" type="text"
-                        name="last_name" id="last_name" value="{{ form.last_name.value|default_if_none:'' }}" required>
+                        name="last_name" id="last_name" value="{{ last_name|default_if_none:'' }}" required>
                 </div>
-                {% if form.last_name.errors %}
-                    <p class="text-red-500">{{ form.last_name.errors|striptags }}</p>
-                {% endif %}
             </div>
 
-            <!-- Email Field with Error Checking -->
+            <!-- Mail del profesor -->
             <div class="border border-white border-opacity-30 p-4 rounded-md space-y-3">
                 <div>
-                    <h3 class="font-semibold">Correo Electrónico</h3>
-                    <p class="opacity-40">Ingrese su correo institucional</p>
+                    <h3 class="font-semibold">Mail del profesor</h3>
+                    <p class="opacity-40">Ingrese el mail del profesor</p>
                 </div>
                 <div class="space-x-2">
-                    <label for="email">Correo Electrónico</label>
+                    <label for="email">Mail</label>
                     <input class="bg-transparent border-white border-opacity-30 p-1 rounded-md" type="email"
-                           name="email" id="email" value="{{ form.email.value|default_if_none:'' }}" required>
+                        name="email" id="email" pattern="[a-zA-Z0-9._%+-]+@eafit\.edu\.co"
+                        value="{{ email|default_if_none:'' }}" required>
                 </div>
-                {% if form.email.errors %}
-                    <p class="text-red-500">{{ form.email.errors|striptags }}</p>
-                {% endif %}
             </div>
 
-            <!-- Password -->
-            <div class="border border-white border-opacity-30 p-4 rounded-md space-y-3">
+            <!-- Cursos del profesor -->
+            <div class="border border-white border-opacity-30 p-4 rounded-md space-y-3 w-full">
                 <div>
-                    <h3 class="font-semibold">Contraseña</h3>
-                    <p class="opacity-40">Ingrese una contraseña segura</p>
+                    <h3 class="font-semibold">Cursos del profesor</h3>
+                    <p class="opacity-40">Seleccione todos los cursos que dicta el profesor</p>
                 </div>
-                <div class="space-x-2">
-                    <label for="password1">Contraseña</label>
-                    <input class="bg-transparent border-white border-opacity-30 p-1 rounded-md" type="password"
-                           name="password1" id="password1" required>
+                <h2>Cursos</h2>
+                <div class="grid grid-cols-4 gap-3">
+                    {% for course in courses %}
+                    <div class="w-full">
+                        <input class="text-black focus:ring-0 rounded" type="checkbox" id="course_{{ course.id }}"
+                            name="cursos" value="{{ course.id }}" {% if course.id in selected_courses %}checked{% endif%}>
+                        <label class="opacity-80" for="course_{{ course.id }}">{{ course }}</label>
+                    </div>
+                    {% endfor %}
                 </div>
-                {% if form.password1.errors %}
-                    <p class="text-red-500">{{ form.password1.errors|striptags }}</p>
-                {% endif %}
-            </div>
-
-            <!-- Password Confirmation -->
-            <div class="border border-white border-opacity-30 p-4 rounded-md space-y-3">
-                <div>
-                    <h3 class="font-semibold">Confirma tu Contraseña</h3>
-                </div>
-                <div class="space-x-2">
-                    <label for="password2">Confirmar Contraseña</label>
-                    <input class="bg-transparent border-white border-opacity-30 p-1 rounded-md" type="password"
-                           name="password2" id="password2" required>
-                </div>
-                {% if form.password2.errors %}
-                    <p class="text-red-500">{{ form.password2.errors|striptags }}</p>
-                {% endif %}
             </div>
 
             <button class="font-semibold transition duration-200 hover:opacity-70 bg-white text-black p-2 rounded-md"
-                type="submit">Registrarse</button>
+                type="submit">Añadir profesor</button>
         </form>
     </section>
 
 </main>
 
 <script>
-    // Show modal only if there is an email-specific error
-    {% if form.email.errors %}
-        document.querySelector('#error-modal').showModal();
+    // Show modal with error message if there is one
+    {% if error %}
+    document.querySelector('dialog').showModal()
     {% endif %}
 
     // Function to close modal
     function closeModal() {
-        document.querySelector('#error-modal').close();
+        document.querySelector('dialog').close()
     }
 </script>
+
+
 
 {% endblock %}

@@ -1,57 +1,117 @@
-
-
-<nav class="bg-transparent backdrop-blur-md shadow-lg   p-4">
-    <div class="container mx-auto flex justify-between items-center">
+<nav class="bg-transparent backdrop-blur-md shadow-lg h-fit p-4 w-full">
+    <div class="w-full flex justify-between items-center">
+        <!-- Sección del Logo -->
         <div class="text-lg font-semibold w-1/6">
-            <a href="{% url 'home' %}" class="text-4xl   font-bold text-white hover:text-yellow-400"><img
-                    class=" w-1/2 transition duration-200 hover:opacity-30" src="../../static/images/noBgLogo.png" alt=""></a>
+            <a href="{% url 'home' %}" class="text-4xl font-bold text-white hover:text-yellow-400">
+                <img class="w-1/2 transition duration-200 hover:opacity-30" src="../../static/images/noBgLogo.png"
+                    alt="Logo" />
+            </a>
         </div>
+
+        <!-- Barra de búsqueda (visible solo si no está oculta) -->
         {% if not hide_search %}
-        <form class="max-w-lg mx-auto w-full" method="GET" action="{% url 'professors' %}">  
-            
-            <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+        <form class="w-2/3 md:w-1/2    rounded-lg " method="GET" action="{% url 'professors' %}">
             <div class="relative overflow-hidden rounded-lg">
-                <div class="z-10 absolute inset-y-0 right-0 flex  bg-white hover:bg-yellow-400 items-center px-3 group duration-300 transition">
-                    <button type="submit">  <svg class="w-4 h-4 text-black  transition duration-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                    </svg></button>
+                <div
+                    class="z-10 absolute inset-y-0 right-0 flex bg-white hover:bg-yellow-400 items-center px-3 group duration-300 transition">
+                    <button type="submit">
+                        <svg class="w-4 h-4 text-black transition duration-300" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                        </svg>
+                    </button>
                 </div>
-                <input name="search" id="search" value="{{ search_query }}" class="  block w-full bg-transparent border-opacity-20  font-semibold py-2 px-8  text-md text-white  border-gray-300 
-            outline-none focus:ring-0 focus:outline-white focus:border-white border-2 text-xl rounded-md placeholder-opacity-0 transition duration-1000   focus:backdrop-blur placeholder:text-white" placeholder="Busca Tu Profesor..."
-            style="::placeholder{
-                color: white;
-    
-            }" />
-            
+                <input name="search" id="search" value="{{ search_query }}"
+                    class="block w-full bg-transparent border-opacity-20 font-semibold py-1.5 lg:py-2 px-8 text-md text-white border-gray-300 outline-none focus:ring-0 focus:outline-white focus:border-white border-2 text-xl rounded-lg placeholder-opacity-0 transition duration-1000 placeholder:text-white"
+                    placeholder="Busca Tu Profesor..." />
             </div>
         </form>
         {% endif %}
 
-        
-        <ul class="flex space-x-4 items-center">
+        <!-- Botón de menú para pantallas pequeñas -->
+ 
+            <button id="menuButton"
+                class="md:hidden inline-flex items-center justify-center p-2 w-10 h-10 text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                onclick="openMenu()">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 17 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M1 1h15M1 7h15M1 13h15" />
+                </svg>
+            </button>
+
+
+        <!-- Opciones de usuario para pantallas grandes -->
+        <ul class="hidden md:flex space-x-4 items-center">
             {% if user.is_authenticated %}
-            <li class="text-white font-bold">Hola, {{ user.first_name }}</li>
+            <li class="text-white font-bold hidden lg:block ">Hola, {{ user.first_name }}</li>
             <li>
                 <form method="POST" action="{% url 'logout' %}">
                     {% csrf_token %}
-                    <button type="submit" class="text-black bg-white font-bold p-2 rounded-md border hover:border-red-700 hover:bg-red-900 hover:text-white transition duration-300 ease-in-out">
+                    <button type="submit"
+                        class="text-black bg-white font-bold p-2 rounded-md border hover:border-red-700 hover:bg-red-900 hover:text-white transition duration-300 ease-in-out">
                         Cerrar sesión
                     </button>
                 </form>
             </li>
             {% else %}
-            <li>
-                <a href="{% url 'register' %}" class="text-black bg-white font-bold p-4 rounded-md hover:opacity-85">
-                    Regístrate
+            <li class="relative group p-3 lg:p-4 rounded-md bg-black">
+                <a href="{% url 'login' %}" class="text-white font-bold">
+                    Inicia sesión
                 </a>
+                <div class="absolute inset-0 bg-white rounded-md -z-10 blur-sm group-hover:blur-md transition duration-300 ease-in-out">
+                </div>
             </li>
             <li>
-                <a href="{% url 'login' %}" class="text-white font-bold p-4 rounded-md bg-black">
-                    Inicia sesión
+                <a href="{% url 'register' %}"
+                    class="text-black bg-white font-bold p-3 lg:p-4 rounded-md hover:opacity-85">
+                    Regístrate
                 </a>
             </li>
             {% endif %}
         </ul>
+    </div>
 
+    <!-- Pantalla deslizante -->
+    <div id="menuOverlay"
+        class="md:hidden fixed h-dvh w-dvw top-0 left-0 bg-black bg-opacity-90 transform translate-x-full transition-transform duration-300 z-50">
+        <button class="absolute top-4 left-4 text-white text-2xl font-bold" onclick="closeMenu()">
+            X
+        </button>
+        <div class="flex flex-col justify-center items-center h-full space-y-12">
+            {% if user.is_authenticated %}
+            <p class="text-white text-xl font-bold">Hola, {{ user.first_name }}</p>
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit"
+                    class="text-black bg-white font-bold p-2 rounded-md border hover:border-red-700 hover:bg-red-900 hover:text-white transition duration-300 ease-in-out"
+                    >
+                    Cerrar sesión
+                </button>
+            </form>
+            {% else %}
+            <div class="relative group p-3 lg:p-4 rounded-md bg-black">
+                <a href="{% url 'login' %}" class="text-white font-bold " >
+                    Inicia sesión
+                    
+                </a>
+                <div class="absolute inset-0 bg-white rounded-md -z-10 blur-sm group-hover:blur-md transition duration-300 ease-in-out"></div>
+            </div>
+            <a href="{% url 'register' %}" class="text-black bg-white font-bold p-3 lg:p-4 rounded-md hover:opacity-85" >
+                Regístrate
+            </a>
+            {% endif %}
+        </div>
     </div>
 </nav>
+
+<script>
+    function openMenu() {
+        document.getElementById("menuOverlay").classList.remove("translate-x-full");
+    }
+
+    function closeMenu() {
+        document.getElementById("menuOverlay").classList.add("translate-x-full");
+    }
+</script>

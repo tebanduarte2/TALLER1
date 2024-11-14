@@ -3,95 +3,113 @@
 {% block content %}
 
 <style>
-          #professor-rating input[type="radio"]:checked + label {
-            border-color: #fbbf24; /* Color del borde cuando se selecciona */
-            border-radius: 0.375rem; /* Para bordes redondeados */
-            color: #fbbf24; /* Color del texto cuando se selecciona */
-        }
-        
-          #professor-course input[type="radio"]:checked + label {
-            border-color: #fbbf24; /* Color del borde cuando se selecciona */
-            border-radius: 0.375rem; /* Para bordes redondeados */
-            color: #fbbf24; /* Color del texto cuando se selecciona */
-        }
+  #professor-rating input[type="radio"]:checked+label {
+    border-color: #fbbf24;
+    /* Color del borde cuando se selecciona */
+    border-radius: 0.375rem;
+    /* Para bordes redondeados */
+    color: #fbbf24;
+    /* Color del texto cuando se selecciona */
+  }
 
+  #professor-course input[type="radio"]:checked+label {
+    border-color: #fbbf24;
+    /* Color del borde cuando se selecciona */
+    border-radius: 0.375rem;
+    /* Para bordes redondeados */
+    color: #fbbf24;
+    /* Color del texto cuando se selecciona */
+  }
 </style>
 
-<main class="flex w-full justify-around m-12">
-  <section class="w-2/5">
-    <form class="flex flex-col gap-6" action="" method="POST">
-      {% csrf_token %}
-      
-      <div class="bg-zinc-950 p-10 rounded-md border border-white border-opacity-20 space-y-4">
-        <p>Materia</p>
-        <div>
-          <h1 class="font-semibold">Elige la materia a calificar</h1>
-          <h2 class="opacity-50">{{ professor.first_name }} {{ professor.last_name }}</h2>
-        </div>
-      <p>Materia</p>
-        <div class="space-y-4 flex flex-col w-full items-center">
-           
-          <div id="professor-course" class="grid grid-cols-3 gap-4 items-center w-full">
-            <!-- Dynamically generate course options -->
-            {% for course in professor.courses.all %}
-            <input type="radio" id="course-{{ course.id }}" name="course" value="{{ course.id }}" class="hidden" />
-            <label
-              class="py-3 px-5 border border-transparent rounded-lg cursor-pointer transition-colors duration-300 hover:border-yellow-400 text-white text-center"
-              for="course-{{ course.id }}">{{ course.name }}</label>
-            {% endfor %}
+<main class="flex flex-col items-center w-full justify-around gap-6 lg:gap-0 lg:flex-row lg:items-start">
+<section class="lg:hidden w-dvw bg-zinc-950 py-8 px-12 sticky top-16 z-10">
+  <h1 class="font-bold text-4xl tracking-tight text-white">
+    CALIFICACION
+    PROFESOR
+  </h1>
+  <h2 class="text-3xl tracking-tighter text-white">{{ professor.first_name }} {{ professor.last_name }}</h2>
+  <p class="opacity-45 text-gray-400">{{ professor.courses.count }} cursos</p>
+</section>
+
+  <div class="w-2/3 lg:w-1/2">
+   
+    <section class="w-full">
+      <form class="flex flex-col gap-6" action="" method="POST">
+        {% csrf_token %}
+
+        <div class="bg-zinc-950 p-10 rounded-md border border-white border-opacity-20 space-y-4">
+          <div>
+            <h1 class="font-semibold">Elige la materia a calificar</h1>
+            <h2 class="opacity-50">{{ professor.first_name }} {{ professor.last_name }}</h2>
           </div>
-          <p class="opacity-50">Selecciona una Opción</p>
-        </div>
-      
-        {% if error %}
-        <p class="text-red-500">{{ error }}</p>
-        {% endif %}
-      </div>
+          <p>Materia</p>
+          <div class="space-y-4 flex flex-col w-full items-center">
 
-
-      <div id="professor-rating" class="bg-zinc-950 p-10 rounded-md border border-white border-opacity-20 space-y-4">
-        <div>
-          <h1 class="font-semibold">Califica tu profesor</h1>
-          <h2 class="opacity-50">{{ professor.first_name }} {{ professor.last_name }}</h2>
-        </div>
-
-        <div class="space-y-4 flex flex-col w-fit items-center">
-          <div class="flex gap-4 items-center flex-wrap">
-            <p>Calificación</p>
-            {% for opcion in opciones %}
-            <input type="radio" id="rating-{{ opcion }}" name="rating" value="{{ opcion }}" class="hidden raing_description" />
-            <label
-              class="py-3 px-5 border border-transparent rounded-lg cursor-pointer transition-colors duration-300  hover:border-yellow-400 text-white"
-              onclick="updateRatingText('Calificación: {{ opcion }}')" for="rating-{{ opcion }}">{{ opcion }}</label>
-            {% endfor %}
+            <div id="professor-course" class="text-lg font-semibold  grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4 items-center w-full">
+              <!-- Dynamically generate course options -->
+              {% for course in professor.courses.all %}
+              <input type="radio" id="course-{{ course.id }}" name="course" value="{{ course.id }}" class="hidden" />
+              <label
+                class="py-3 px-5 w-full   border border-transparent rounded-lg cursor-pointer transition-colors duration-300 hover:border-yellow-400 text-white text-center"
+                for="course-{{ course.id }}">{{ course.name }}</label>
+              {% endfor %}
+            </div>
+            <p class="opacity-50">Selecciona una Opción</p>
           </div>
-          <p id="rating_description" class="opacity-50">Selecciona una Opción</p>
+
+          {% if error %}
+          <p class="text-red-500">{{ error }}</p>
+          {% endif %}
         </div>
 
-        {% if error %}
-        <p class="text-red-500">{{ error }}</p>
-        {% endif %}
-      </div>
 
-      <div class="bg-zinc-950 p-10 rounded-md border border-white border-opacity-20 space-y-4">
-        <div>
-          <h1 class="font-semibold">Escribe una Reseña</h1>
-          <h2 class="opacity-50">{{ professor.first_name }} {{ professor.last_name }}</h2>
+        <div id="professor-rating" class="bg-zinc-950 p-10 rounded-md border border-white border-opacity-20 space-y-4">
+          <div>
+            <h1 class="font-semibold">Califica tu profesor</h1>
+            <h2 class="opacity-50">{{ professor.first_name }} {{ professor.last_name }}</h2>
+          </div>
+
+          <div class="space-y-4 flex flex-col w-fit items-center">
+            <div class="flex gap-2 md:gap-4  items-center ">
+              <p class="hidden sm:block" >Calificación</p>
+              {% for opcion in opciones %}
+              <input type="radio" id="rating-{{ opcion }}" name="rating" value="{{ opcion }}"
+                class="hidden raing_description" />
+              <label
+                class="py-3 px-5 border border-transparent rounded-lg cursor-pointer transition-colors duration-300  hover:border-yellow-400 text-white"
+                onclick="updateRatingText('Calificación: {{ opcion }}')" for="rating-{{ opcion }}">{{ opcion }}</label>
+              {% endfor %}
+            </div>
+            <p id="rating_description" class="opacity-50">Selecciona una Opción</p>
+          </div>
+
+          {% if error %}
+          <p class="text-red-500">{{ error }}</p>
+          {% endif %}
         </div>
 
-        <textarea class="w-full h-32 bg-zinc-950 border border-white border-opacity-20 rounded-md p-4 text-white"
-          name="review" placeholder="Escribe tu reseña"></textarea>
-      </div>
+        <div class="bg-zinc-950 p-10 rounded-md border border-white border-opacity-20 space-y-4">
+          <div>
+            <h1 class="font-semibold">Escribe una Reseña</h1>
+            <h2 class="opacity-50">{{ professor.first_name }} {{ professor.last_name }}</h2>
+          </div>
 
-      <button
-        class="bg-white text-black  font-semibold py-3 rounded-md border border-transparent border-opacity-20 hover:opacity-60 transition duration-300">
-        Enviar
-      </button>
+          <textarea class="w-full h-32 bg-zinc-950 border border-white border-opacity-20 rounded-md p-4 text-white"
+            name="review" placeholder="Escribe tu reseña"></textarea>
+        </div>
 
-    </form>
-  </section>
+        <button
+          class="bg-white text-black  font-semibold py-3 rounded-md border border-transparent border-opacity-20 hover:opacity-60 transition duration-300">
+          Enviar
+        </button>
 
-  <section class="bg-zinc-950 p-12 rounded-md border border-white border-opacity-20 space-y-3 w-[28%]">
+      </form>
+    </section>
+  </div>
+
+  <section
+    class="bg-zinc-950 p-12 rounded-md border border-white border-opacity-20 space-y-3 w-1/3 h-fit hidden lg:flex-col lg:flex">
     <h1 class="font-bold text-4xl tracking-tight text-white">
       CALIFICACION <br />
       PROFESOR
