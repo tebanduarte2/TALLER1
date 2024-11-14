@@ -4,22 +4,23 @@
 
 {% block content %}
 
-<main class="mx-24 ">
+<main class="w-full">
+    <div class="w-full px-12">
     <section id="teacher-summary" class="my-8 flex flex-col lg:flex-row gap-16 items-center   lg:justify-around">
         <article id="general-information" class="w-full items-end  flex gap-12 lg:items-start lg:w-1/3 lg:flex-col lg:gap-6">
             <div class="container flex flex-col w-fit gap-2 ">
                 <div class="flex gap-3">
-                    <div class="text-7xl font-extrabold">
+                    <div class="text-5xl font-extrabold">
                         {{ professor.average_rating }}
                     </div>
-                    <p class="mt-2  text-yellow-400">/ 5.0</p>
+                    <p class="mt-2  flex-shrink-0  text-yellow-400">/ 5.0</p>
                 </div>
                 <p>Basado en {{ ratings_count }} reseña(s)</p>
             </div>
 
             <div id="professor-description" class="flex flex-col gap-2">
                 <div>
-                    <h1 class="text-4xl font-bold ">{{ professor }}</h1>
+                    <h1 class="text-2xl font-bold ">{{ professor }}</h1>
                     <P class=" text-xs font-bold text-yellow-400">{{ professor.email }}</P>
                 </div>
                 <p class="text-gray-400">
@@ -62,6 +63,7 @@
         </article>
 
     </section>
+    </div>
 
 </main>
 
