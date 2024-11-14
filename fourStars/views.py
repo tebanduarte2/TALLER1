@@ -147,12 +147,22 @@ def add_professor(request):
                 'selected_courses': selected_courses_obj,
             })
 
-        # Create the Professor instance
-        professor = Professor.objects.create(
-            first_name=first_name,
-            last_name=last_name,
-            email=email
-        )
+        
+        # Try to create a new professor, if the email is not unique, show an error, or if any other error occurs
+        try:
+            professor = Professor.objects.create(first_name=first_name, last_name=last_name, email=email)
+        except Exception as e:
+            selected_courses = [int(course_id) for course_id in selected_courses]
+            return render(request, 'fourStars/addProfessor.html', {
+                'courses': Course.objects.all(),
+                'error': 'Error al crear el profesor. Asegúrese de que el correo sea único.',
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'selected_courses': selected_courses_obj,
+            })
+            
+            
 
         # Add selected courses
         for course_id in selected_courses:
