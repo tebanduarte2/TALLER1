@@ -19,13 +19,12 @@ Additionally, 4Stars serves as a feedback tool for the university, allowing the 
   - [🛠 Prerequisites](#-prerequisites)
   - [🏗️ Setup Instructions](#️-setup-instructions)
     - [1. Cloning the Repository](#1-cloning-the-repository)
-    - [2. Environment Configuration](#2-environment-configuration)
-    - [3. Database Setup](#3-database-setup)
+    - [2. Database Setup](#3-database-setup)
   - [📦 Installation of Requirements](#-installation-of-requirements)
   - [🚀 Running the Project](#-running-the-project)
-    - [4. Django and Tailwind Setup](#4-django-and-tailwind-setup)
-    - [5. Starting the Services in Parallel](#5-starting-the-services-in-parallel)
-      - [6. OS Specific Commands](#6-os-specific-commands)
+    - [3. Django and Tailwind Setup](#4-django-and-tailwind-setup)
+    - [4. Starting the Services in Parallel](#5-starting-the-services-in-parallel)
+      - [5. OS Specific Commands](#6-os-specific-commands)
         - [For Linux/macOS](#for-linuxmacos)
         - [For Windows](#for-windows)
   - [🤝 Contributing](#-contributing)
@@ -43,7 +42,6 @@ The **4Stars Project** is built using **Django** as the backend and **Tailwind C
 Before setting up the project, make sure you have the following installed:
 
 - **Python** (3.8 or higher)
-- **PostgreSQL**
 - **Node.js** (for Tailwind CSS)
 - **npm** or **yarn**
 - **Django Tailwind** extension
@@ -58,17 +56,8 @@ git clone https://github.com/username/4stars.git
 cd 4stars
 ```
 
-### 2. Environment Configuration
-Create a `.env` file in the root of the project with the following credentials to connect to the PostgreSQL database:
 
-```bash
-PGHOST='ep-steep-star-a5i8zayx.us-east-2.aws.neon.tech'
-PGDATABASE='4stars-db'
-PGUSER='4stars-db_owner'
-PGPASSWORD='hvS8JjOF1gTq'
-```
-
-### 3. Database Setup
+### 2. Database Setup
 Run the following commands to set up the PostgreSQL database:
 
 ```bash
@@ -95,7 +84,7 @@ Before running the project, you need to install all dependencies for both **Djan
 
 ## 🚀 Running the Project
 
-### 4. Django and Tailwind Setup
+### 3. Django and Tailwind Setup
 To ensure that the project runs smoothly, you’ll need to install the necessary dependencies for both Django and Tailwind.
 
 1. **Install Tailwind**:
@@ -113,7 +102,7 @@ To ensure that the project runs smoothly, you’ll need to install the necessary
     python manage.py runserver
     ```
 
-### 5. Starting the Services in Parallel
+### 4. Starting the Services in Parallel
 
 For convenience, you can run both the **Django** and **Tailwind** services simultaneously by opening two terminal windows or tabs:
 
@@ -132,7 +121,7 @@ Alternatively, you can use the `&` operator to run them in parallel in one termi
 python manage.py runserver & python manage.py tailwind start
 ```
 
-#### 6. OS Specific Commands
+#### 5. OS Specific Commands
 ##### For Linux/macOS
 - Clone the repository:
     ```bash
