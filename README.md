@@ -205,6 +205,7 @@ For any questions or support, feel free to reach out via email:
 - **Valeria Hornung**
 - **Nathaly Ramirez**
 - **Esteban Duarte**
+- **Gia Mariana Calle**
 
 We appreciate your collaboration and hope you enjoy working with us!
 
