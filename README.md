@@ -179,14 +179,6 @@ We welcome contributions from the community! Please follow these steps to get in
     ```
 5. Open a Pull Request.
 
----
-
-## 📧 Contact Us
-For any questions or support, feel free to reach out via email:
-
-**Maximiliano Bustamante** – [mbustamang@eafit.edu.co](mailto:mbustamang@eafit.edu.co) 🦝
-
----
 
 ## 👥 Contributors
 
