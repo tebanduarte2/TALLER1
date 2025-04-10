@@ -1,6 +1,10 @@
+# services/teaching_verifier.py
+from abc import ABC, abstractmethod
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+
 
 
 
@@ -26,7 +30,7 @@ class Student(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     # add today as default
-    date_joined = models.DateTimeField(auto_now_add=True)
+    date_joined = models.DateTimeField(default=timezone.now)
 
     objects = StudentManager()
 
@@ -64,33 +68,35 @@ class Professor(models.Model):
     #method for formating decimal to 2 decimal places
     
     
+
+class TeachingVerifier(ABC):
+    @abstractmethod
+    def professor_teaches_course(self, professor, course) -> bool:
+        pass
+
+class ORMTeachingVerifier(TeachingVerifier):
+    def professor_teaches_course(self, professor, course) -> bool:
+        return professor.courses.filter(id=course.id).exists()
     
-
-
 class Rating(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)  # Ensures ratings are deleted when a student is deleted
-    professor = models.ForeignKey(Professor, on_delete=models.CASCADE, related_name='ratings')  # Ensures ratings are deleted when a professor is deleted
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, default=1)  # Ensures ratings are linked to a course
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    professor = models.ForeignKey(Professor, on_delete=models.CASCADE, related_name='ratings')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, default=1)
     rating = models.IntegerField()
     review = models.TextField()
 
+    verifier = ORMTeachingVerifier()
+
     class Meta:
-        unique_together = ('student', 'professor', 'course')  # Ensure a student can only rate a professor for a specific course once
+        unique_together = ('student', 'professor', 'course')
 
     def clean(self):
-        # Ensure the course is taught by the professor
-        if not self.professor.courses.filter(id=self.course.id).exists():
+        if not self.verifier.professor_teaches_course(self.professor, self.course):
             raise ValidationError(f"The course '{self.course}' is not taught by Professor {self.professor}.")
 
     def save(self, *args, **kwargs):
-        # Call clean method before saving
         self.clean()
         super().save(*args, **kwargs)
-
-    def __str__(self):  
-        return f"{self.student} rated {self.professor} for {self.course}: {self.rating}"
-
-
     
         
            

@@ -19,8 +19,7 @@ from django.urls import path, include
 from fourStars import views as fourStars_views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('about/', fourStars_views.about, name='about'),
+    #path('about/', fourStars_views.about, name='about'),
     path('', include('fourStars.urls')),
     path('__reload__/', include('django_browser_reload.urls')),
-    
 ]

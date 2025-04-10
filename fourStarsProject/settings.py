@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 from os import getenv
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -97,9 +97,9 @@ WSGI_APPLICATION = 'fourStarsProject.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
-load_dotenv()
+#load_dotenv()
 #DATABASE - HOSTED BY   NEON
-DATABASES = {
+"""DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
     'NAME': getenv('PGDATABASE'),
@@ -112,6 +112,12 @@ DATABASES = {
     },
   }
 
+}"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # Password validation

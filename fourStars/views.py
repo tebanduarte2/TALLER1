@@ -1,37 +1,55 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.db.models import Count, Prefetch, Q
-from .models import Professor, Rating, Course
-from django.views.decorators.cache import cache_page
+from django.views import View
+from django.views.generic import TemplateView, ListView, DetailView, FormView
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import login
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.db.models import Count, Prefetch, Q
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .factories.student_factory import StudentFactory
+from .factories.professor_factory import ProfessorFactory
+from django.core.exceptions import ValidationError
+
+from .models import Professor, Rating, Course
 from .forms import StudentLoginForm, StudentRegistrationForm
-from django.contrib.auth.decorators import login_required
 
 
-def home(request):
+class HomeView(TemplateView):
+    template_name = 'fourStars/home.html'
 
-    return render(request, 'fourStars/home.html', {'search': 'True'})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search'] = True
+        return context
 
 
-def about(request):
-    
-    return render(request, 'fourStars/about.html')
+class AboutView(TemplateView):
+    template_name = 'fourStars/about.html'
 
 
-def register(request):
-    if request.method == 'POST':
-        form = StudentRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()  # Save the new user
-            login(request, user)  # Log the user in
-            messages.success(request, f'Welcome {user.first_name}, your account has been created!')
-            return redirect('home')  # Redirect to home page or wherever you want
-    else:
-        form = StudentRegistrationForm()
-    
-    return render(request, 'fourStars/register.html', {'form': form})
+class RegisterView(FormView):
+    template_name = 'fourStars/register.html'
+    form_class = StudentRegistrationForm
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        try:
+            data = form.cleaned_data
+            user = StudentFactory.create(
+                first_name=data['first_name'],
+                last_name=data['last_name'],
+                email=data['email'],
+                password=data['password1']
+            )
+            login(self.request, user)
+            messages.success(self.request, f'Bienvenido {user.first_name}, tu cuenta ha sido creada.')
+        except ValidationError as e:
+            form.add_error('email', e.message)
+            return self.form_invalid(form)
+
+        return super().form_valid(form)
+
 
 class StudentLoginView(LoginView):
     form_class = StudentLoginForm
@@ -40,219 +58,167 @@ class StudentLoginView(LoginView):
     def form_valid(self, form):
         user = form.get_user()
         login(self.request, user)
-        messages.success(self.request, f"Welcome back, {user.first_name}!")
+        messages.success(self.request, f"¡Bienvenido de nuevo, {user.first_name}!")
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('home')  # Ensure this redirects to 'home'
+        return reverse_lazy('home')
 
-    
-        
 
 class StudentLogoutView(LogoutView):
-    next_page = reverse_lazy('home')  # Redirect to the homepage after logout
+    next_page = reverse_lazy('home')
 
 
-@login_required  # Ensure that only logged-in users can access this view
-def professor_rating(request, professor_id):
-    professor = get_object_or_404(Professor, id=professor_id)
+class ProfessorListView(ListView):
+    model = Professor
+    template_name = 'fourStars/professors.html'
+    context_object_name = 'professors'
 
-    # Get the currently logged-in student from the request
-    student = request.user
+    def get_queryset(self):
+        search_query = self.request.GET.get('search', '')
+        queryset = Professor.objects.prefetch_related('ratings', 'courses').all()
 
-    if request.method == 'POST':
-        course_id = request.POST.get('course')
-        rating_value = request.POST.get('rating')
-        review_text = request.POST.get('review')
+        if search_query:
+            queryset = queryset.filter(
+                Q(first_name__icontains=search_query) |
+                Q(last_name__icontains=search_query) |
+                Q(courses__name__icontains=search_query)
+            ).distinct()
 
-        # Validate course selection
-        if not course_id:
-            error = "Debe seleccionar una materia"
-            return render(request, 'fourStars/professorRating.html', {
-                'professor': professor,
-                'opciones': range(1, 6),
-                'error': error,
-            })
+        return queryset
 
-        # Ensure the selected course is taught by the professor
-        course = get_object_or_404(Course, id=course_id)
-        if course not in professor.courses.all():
-            error = "La materia seleccionada no es impartida por este profesor."
-            return render(request, 'fourStars/professorRating.html', {
-                'professor': professor,
-                'opciones': range(1, 6),
-                'error': error,
-            })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['professors'] = [
+            {
+                'professor': p,
+                'average_rating': p.average_rating,
+                'ratings_count': p.ratings.count(),
+                'courses': p.courses.all(),
+            }
+            for p in context['professors']
+        ]
+        context['search_query'] = self.request.GET.get('search', '')
+        return context
 
-        if rating_value:
-            # Check if the student already rated this professor and course
-            rating, created = Rating.objects.update_or_create(
-                student=student,
-                professor=professor,
-                course=course,
-                defaults={
-                    'rating': rating_value,
-                    'review': review_text,
-                }
-            )
 
-            # Redirect to the professor view or a success page
-            return redirect('professor_view', professor_id=professor.id)
-        else:
-            # Return the form with an error if no rating was provided
-            error = "Debe seleccionar una calificación"
-            return render(request, 'fourStars/professorRating.html', {
-                'professor': professor,
-                'opciones': range(1, 6),
-                'error': error,
-            })
+class ProfessorDetailView(DetailView):
+    model = Professor
+    template_name = 'fourStars/professorView.html'
+    context_object_name = 'professor'
+    pk_url_kwarg = 'professor_id'
 
-    # If GET request, show the form
-    return render(request, 'fourStars/professorRating.html', {
-        'professor': professor,
-        'opciones': range(1, 6),
-        'student_name': student.first_name,  # Pass student's first name to the template
-    })
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        professor = self.object
 
-@login_required  # Ensure that only logged-in users can access this view
-def add_professor(request):
-    if request.method == 'POST':
+        rating_distribution = (
+            professor.ratings.values('rating')
+            .annotate(count=Count('rating'))
+            .order_by('-rating')
+        )
+        total_ratings = sum(item['count'] for item in rating_distribution) or 1
+
+        context['ratings_distribution'] = [
+            {
+                'stars': i,
+                'percentage': next((item['count'] / total_ratings * 100 for item in rating_distribution if item['rating'] == i), 0),
+                'count': next((item['count'] for item in rating_distribution if item['rating'] == i), 0),
+            }
+            for i in range(5, 0, -1)
+        ]
+        context['ratings'] = professor.ratings.select_related('student').all()
+        context['ratings_count'] = professor.ratings.count()
+        context['courses'] = professor.courses.all()
+        return context
+
+
+
+class AddProfessorView(LoginRequiredMixin, View):
+    template_name = 'fourStars/addProfessor.html'
+
+    def get(self, request):
+        return render(request, self.template_name, {
+            'courses': Course.objects.all()
+        })
+
+    def post(self, request):
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         selected_courses = request.POST.getlist('cursos')
-        selected_courses_obj = list(Course.objects.filter(id__in=selected_courses))
+        selected_courses_obj = Course.objects.filter(id__in=selected_courses)
 
-        # Validate email
-        if not email.endswith('@eafit.edu.co'):
-            selected_courses = [int(course_id) for course_id in selected_courses]
-            return render(request, 'fourStars/addProfessor.html', {
-                'courses': Course.objects.all(),
-                'error': 'El correo debe terminar con @eafit.edu.co',
-                'first_name': first_name,
-                'last_name': last_name,
-                'email': email,
-                'selected_courses': selected_courses_obj,
-            })
-
-        # Ensure at least one course is selected
-        if len(selected_courses) == 0:
-            selected_courses = [int(course_id) for course_id in selected_courses]
-            return render(request, 'fourStars/addProfessor.html', {
-                'courses': Course.objects.all(),
-                'error': 'Debe seleccionar al menos un curso.',
-                'first_name': first_name,
-                'last_name': last_name,
-                'email': email,
-                'selected_courses': selected_courses_obj,
-            })
-
-        
-        # Try to create a new professor, if the email is not unique, show an error, or if any other error occurs
         try:
-            professor = Professor.objects.create(first_name=first_name, last_name=last_name, email=email)
-        except Exception as e:
-            selected_courses = [int(course_id) for course_id in selected_courses]
-            return render(request, 'fourStars/addProfessor.html', {
+            professor = ProfessorFactory.create(first_name, last_name, email, selected_courses_obj)
+        except ValueError as e:
+            return render(request, self.template_name, {
                 'courses': Course.objects.all(),
-                'error': 'Error al crear el profesor. Asegúrese de que el correo sea único.',
+                'error': str(e),
                 'first_name': first_name,
                 'last_name': last_name,
                 'email': email,
                 'selected_courses': selected_courses_obj,
             })
-            
-            
-
-        # Add selected courses
-        for course_id in selected_courses:
-            course = Course.objects.get(id=course_id)
-            professor.courses.add(course)
-
-        # Redirect to a success page or the homepage
+        except Exception:
+            return render(request, self.template_name, {
+                'courses': Course.objects.all(),
+                'error': 'Error al crear el profesor. Verifica que el correo sea único.',
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'selected_courses': selected_courses_obj,
+            })
         return redirect('professors')
 
-    # If GET request, show the form
-    courses = Course.objects.all()
-    return render(request, 'fourStars/addProfessor.html', {'courses': courses})
 
+class ProfessorRatingView(LoginRequiredMixin, View):
+    template_name = 'fourStars/professorRating.html'
 
-
-
-def professors(request):
-    search_query = request.GET.get('search', '')
-    # Prefetch related ratings and courses to avoid multiple queries in the template
-    professors = Professor.objects.prefetch_related('ratings', 'courses').all()
-    
-    if search_query:
-        professors = professors.filter(
-            Q(first_name__icontains=search_query) | 
-            Q(last_name__icontains=search_query) |
-            Q(courses__name__icontains=search_query)
-        ).distinct()
-    
-    professors_with_data = []
-    for professor in professors:
-        professors_with_data.append({
+    def get(self, request, professor_id):
+        professor = get_object_or_404(Professor, id=professor_id)
+        return render(request, self.template_name, {
             'professor': professor,
-            'average_rating': professor.average_rating,
-            'ratings_count': professor.ratings.count(),
-            'courses': professor.courses.all(),
+            'opciones': range(1, 6),
+            'student_name': request.user.first_name,
         })
 
-    return render(request, 'fourStars/professors.html', {'professors': professors_with_data, 'search_query': search_query})
+    def post(self, request, professor_id):
+        professor = get_object_or_404(Professor, id=professor_id)
+        student = request.user
+        course_id = request.POST.get('course')
+        rating_value = request.POST.get('rating')
+        review_text = request.POST.get('review')
 
+        if not course_id:
+            return render(request, self.template_name, {
+                'professor': professor,
+                'opciones': range(1, 6),
+                'error': "Debe seleccionar una materia",
+            })
 
+        course = get_object_or_404(Course, id=course_id)
+        if course not in professor.courses.all():
+            return render(request, self.template_name, {
+                'professor': professor,
+                'opciones': range(1, 6),
+                'error': "La materia seleccionada no es impartida por este profesor.",
+            })
 
- 
-def professor_view(request, professor_id=None):
-    # Fetch professor with related courses and ratings in a single query
-    professor = Professor.objects.prefetch_related(
-        Prefetch('ratings', queryset=Rating.objects.select_related('student')),
-        'courses'
-    ).get(id=professor_id)
+        if not rating_value:
+            return render(request, self.template_name, {
+                'professor': professor,
+                'opciones': range(1, 6),
+                'error': "Debe seleccionar una calificación",
+            })
 
-
-    rating_distribution = (
-        professor.ratings.values('rating')
-        .annotate(count=Count('rating'))
-        .order_by('-rating')
-    )
-    total_ratings = sum(item['count'] for item in rating_distribution) or 1
-
-    # Calculate the distribution and percentage of each rating
-    ratings_distribution = [
-        {
-            'stars': i,
-            'percentage': next(
-                (
-                    (item['count'] / total_ratings) * 100
-                    for item in rating_distribution
-                    if item['rating'] == i
-                ),
-                0,
-            ),
-            'count': next(
-                (item['count'] for item in rating_distribution if item['rating'] == i),
-                0,
-            ),
-        }
-        for i in range(5, 0, -1)
-    ]
-
-
-    # Ratings are already prefetched, so no additional queries needed
-    ratings = professor.ratings.all()
-    ratings_count = len(ratings)
-
-    # Prepare the context with prefetched courses
-    context = {
-        'professor': professor,
-        'ratings_distribution': ratings_distribution,
-        'ratings': ratings,
-        'ratings_count': ratings_count,
-        'courses': professor.courses.all(),
-    }
-
-    return render(request, 'fourStars/professorView.html', context)
-
+        Rating.objects.update_or_create(
+            student=student,
+            professor=professor,
+            course=course,
+            defaults={
+                'rating': rating_value,
+                'review': review_text,
+            }
+        )
+        return redirect('professor_view', professor_id=professor.id)
